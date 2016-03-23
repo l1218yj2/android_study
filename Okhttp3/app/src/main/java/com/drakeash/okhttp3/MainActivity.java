@@ -21,6 +21,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.recvCat)
     RecyclerView recyclerView;
+    GridLayoutManager layoutManager;
     CatAdapter catAdapter;
 
     @Override
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
         Request request = new Request.Builder()
                 .url("http://thecatapi.com/api/Images/get?format=xml&results_per_page=20")
@@ -43,20 +44,35 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            com.drakeash.okhttp3.Response example;
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    Log.d("", response.body().string());
-                    com.drakeash.okhttp3.Response example = serializer.read(com.drakeash.okhttp3.Response.class, response.body().string());
-                    for(Image image : example.getData().getImages().getImages()){
-                        catAdapter.add(image);
-                    }
+                    String string = response.body().string();
+                    Log.d("xml", string);
+                    example = serializer.read(com.drakeash.okhttp3.Response.class, string);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(example==null){
+                                    return;
+                                }
+                                for (Image image : example.getData().getImages()) {
+                                    catAdapter.add(image);
+                                }
+                            }
+                        });
+                    }
+                }).start();
+
             }
         });
-
-
     }
 }

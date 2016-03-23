@@ -32,7 +32,6 @@ public class CatAdapter extends CustomAdapter<Image, CatAdapter.CatViewHolder> {
         viewHolder = new CatViewHolder(
                 inflater.inflate(R.layout.item_cat, parent, false)
         );
-
         return viewHolder;
     }
 
@@ -40,12 +39,10 @@ public class CatAdapter extends CustomAdapter<Image, CatAdapter.CatViewHolder> {
     public void onBindViewHolder(CatViewHolder holder, int position) {
 
         Image Image = mItems.get(position);
-
         Glide.with(mContext)
                 .load(Image.getUrl())
                 .into(holder.imgvCat);
     }
-
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -58,7 +55,7 @@ public class CatAdapter extends CustomAdapter<Image, CatAdapter.CatViewHolder> {
         public CatViewHolder(View v) {
             super(v);
             mView = itemView;
-            ButterKnife.bind(this, v);
+            imgvCat = (ImageView) v.findViewById(R.id.imgvCat);
         }
     }
 }
