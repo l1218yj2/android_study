@@ -8,8 +8,7 @@ import okhttp3.OkHttpClient;
  * Created by YJLaptop on 2016-03-22.
  */
 public class AppController extends Application {
-    private static String BASE_URL = "http://thecatapi.com/";
-    //api/categories/list
+    ///get?format=xml&results_per_page=20
     private static AppController mInstance;
     private OkHttpClient okHttpClient;
 
@@ -23,5 +22,13 @@ public class AppController extends Application {
         super.onCreate();
         mInstance = this;
     }
+
+    public OkHttpClient getOkHttpClient() {
+        if(okHttpClient == null){
+            okHttpClient = new OkHttpClient();
+        }
+        return okHttpClient;
+    }
+
 
 }
